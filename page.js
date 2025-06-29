@@ -11,6 +11,17 @@ var highestUnrest = -1;
 var lowestUnrest = 1000;
 
 var defaultColours = {};
+var ownerColours = {
+	"House Chaurus": `rgba(255, 0, 0, 0.33)`,
+	"Polar States": `rgba(82, 224, 224, 0.33)`,
+	"Cliff States": `rgba(80, 80, 80, 0.6)`,
+	"Crinian Descendants": `rgba(0, 107, 0, 0.33)`,
+	"Launine States": `rgba(0, 107, 232, 0.33)`,
+	"Imperial Service": `rgba(182, 0, 183, 0.33)`,
+	"House Aleph": `rgba(255, 147, 0, 0.33)`,
+	"Mountain Peoples": `rgba(38, 17, 17, 0.63)`,
+	"Equatorial States": `rgba(255, 255, 44, 0.33)`,
+}
 
 /* This code is dogshit btw. Ex fucking dee*/
 
@@ -153,6 +164,9 @@ function showMapMode(mapmode) {
 		case "unrest":
 			doUnrestMapMode();
 			break;
+		case "owner":
+			doOwnerMapMode();
+			break;
 		case "location":
 		default:
 			doLocationMapMode();
@@ -230,6 +244,13 @@ function doUnrestMapMode() {
 		Red = 255 * diffFromLowest
 		svgDoc.getElementById(`region_${r}`).style.fill = `rgba(${Red}, ${Green}, 0, 0.33)`
 	}
+}
+
+function doOwnerMapMode() {
+	for (let r = 1; r < 23; r++) {
+		region_data = data[r];
+		svgDoc.getElementById(`region_${r}`).style.fill = ownerColours[region_data.Owner];
+	}	
 }
 
 function doLocationMapMode() {
