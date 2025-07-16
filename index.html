@@ -7,6 +7,51 @@
 			}
 		}
 
+		#dimScreen
+		{
+			position:fixed;
+			padding:0;
+			margin:0;
+
+			top:0;
+			left:0;
+
+			width: 100%;
+			height: 100%;
+			background:rgba(0,0,0,0.5);
+		}
+
+		#loadingMessage {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			text-align: center;
+			font-size: xx-large;
+  			text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+			z-index: 10;
+		}
+
+		.loader {
+			width: 48px;
+			height: 48px;
+			border: 5px solid #FFF;
+			border-bottom-color: transparent;
+			border-radius: 50%;
+			display: inline-block;
+			box-sizing: border-box;
+			animation: rotation 1s linear infinite;
+			}
+
+			@keyframes rotation {
+			0% {
+				transform: rotate(0deg);
+			}
+			100% {
+				transform: rotate(360deg);
+			}
+		} 
+
 		table {
 			border: 1px solid #ddd !important;
 			border-top: 1px solid #999;
@@ -18,6 +63,8 @@
   			border-bottom: 1px solid #999;
 		}
 	</style>
+	<div id="loadingMessage">Loading Data...<span class="loader"></span></div>
+	<div id="dimScreen"> </div>
 	<div style="display: flex; justify-content: space-around;">
   <svg  
   	viewBox="0 0 1382 819"
@@ -196,6 +243,7 @@
 	<button class="mm_button" onclick="showMapMode('taxation')" disabled>Taxation</button>
 	<button class="mm_button" onclick="showMapMode('security')" disabled>Security</button>
 	<button class="mm_button" onclick="showMapMode('unrest')" disabled>Unrest</button>
+	<button class="mm_button" onclick="showMapMode('slots_remaining')" disabled>Slots Remaining</button>
   </div>
 
 	<script type="text/javascript" src = "./page.js"></script>

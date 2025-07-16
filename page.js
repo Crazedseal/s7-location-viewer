@@ -9,6 +9,8 @@ var highestSecurity = -1;
 var lowestSecurity = 1000;
 var highestUnrest = -1;
 var lowestUnrest = 1000;
+var highestSlotsRemaining = -1;
+var lowestSlotsRemaining = 1000;
 
 var defaultColours = {};
 var ownerColours = {
@@ -94,6 +96,18 @@ async function loadData() {
 		if (lowestUnrest > data_json.data[i][6]) {
 			lowestUnrest = data_json.data[i][6];
 		}
+
+		SlotsTotal = data_json.data[i][9] + data_json.data[i][10];
+		SlotsTotal -= String(data_json.data[i][12]).split("\n").length;
+		SlotsTotal -= String(data_json.data[i][13]).split("\n").length;
+		structured[i].Slots_Remaining = SlotsTotal;
+
+		if (highestSlotsRemaining < SlotsTotal) {
+			highestSlotsRemaining = SlotsTotal;
+		}
+		if (lowestSlotsRemaining > SlotsTotal) {
+			lowestSlotsRemaining = SlotsTotal;
+		}
 	}
 
 	return structured;
@@ -106,7 +120,8 @@ for (let r = 1; r < 23; r++) {
 
 loadData().then(
 	(value) => { 
-
+		document.getElementById("loadingMessage").remove();
+		document.getElementById("dimScreen").remove();
 		data = value; 
 		var buttons = document.getElementsByClassName('mm_button');
 		// Enable buttons :)
@@ -168,8 +183,13 @@ function showMapMode(mapmode) {
 			doOwnerMapMode();
 			break;
 		case "location":
-		default:
 			doLocationMapMode();
+			break;
+		case "slots_remaining":
+			doSlotsRemainingMapMode();
+			break;
+		default:
+			alert(`No map mode named ${mapmode}.`);
 			break;
 	}
 }
@@ -257,5 +277,23 @@ function doLocationMapMode() {
 	for (let r = 1; r < 23; r++) {
 		svgDoc.getElementById(`region_${r}`).style.fill = defaultColours[`region_${r}`];
 
+	}
+}
+
+function doSlotsRemainingMapMode() {
+if (lowestSlotsRemaining == highestSlotsRemaining) {
+		for (let r = 1; r < 23; r++) {
+			svgDoc.getElementById(`region_${r}`).style.fill = "#ffff0054";
+		}
+		return;
+	}
+	range = highestSlotsRemaining - lowestSlotsRemaining;
+	for (let r = 1; r < 23; r++) {
+		region_data = data[r];
+		diffFromHighest = (highestSlotsRemaining - region_data.Slots_Remaining) / range;
+		diffFromLowest =  (region_data.Slots_Remaining - lowestSlotsRemaining) / range;
+		Green = 255 * diffFromLowest;
+		Red = 255 * diffFromHighest;
+		svgDoc.getElementById(`region_${r}`).style.fill = `rgba(${Red}, ${Green}, 0, 0.33)`
 	}
 }
