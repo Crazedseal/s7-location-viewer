@@ -237,15 +237,39 @@
   </table>
   </div>
   <div style = "display: flex; justify-content: space-around; width: 50%; padding-top: 4px;">
-	<button class="mm_button" onclick="showMapMode('location')" disabled>Location (Default)</button>
-	<button class="mm_button" onclick="showMapMode('owner')" disabled>Owner</button>
-	<button class="mm_button" onclick="showMapMode('wealth')" disabled>Wealth</button>
-	<button class="mm_button" onclick="showMapMode('taxation')" disabled>Taxation</button>
-	<button class="mm_button" onclick="showMapMode('security')" disabled>Security</button>
-	<button class="mm_button" onclick="showMapMode('unrest')" disabled>Unrest</button>
-	<button class="mm_button" onclick="showMapMode('slots_remaining')" disabled>Slots Remaining</button>
+	<div id="mm_location_div">
+		<button class="mm_button" onclick="showMapMode('location')" disabled>Location (Default)</button>
+	</div>
+	<div id = "mm_owner_div">
+		<button class="mm_button" onclick="showMapMode('owner')" disabled>Owner</button>
+	</div>
+	<div id = "mm_wealth_div">
+		<button class="mm_button" onclick="showMapMode('wealth')" disabled>Wealth</button>
+	</div>
+	<div id = "mm_taxation_div">
+		<button class="mm_button" onclick="showMapMode('taxation')" disabled>Taxation</button>
+	</div>
+	<div id = "mm_security_div">
+		<button class="mm_button" onclick="showMapMode('security')" disabled>Security</button>
+	</div>
+	<div id = "mm_unrest_div">
+		<button class="mm_button" onclick="showMapMode('unrest')" disabled>Unrest</button>
+	</div>
+	<div id = "mm_slots_remaining_div">
+		<button class="mm_button" onclick="showMapMode('slots_remaining')" disabled>Slots Remaining</button>
+	</div>
+	<div id = "mm_buildings_owner_div">
+		<button class="mm_button" onclick="showMapMode('building_owner')" style="display: block;" disabled>Building Presence</button>
+		<form id="mm_building_owner_form">
+			<ul id="mm_buildings_owner_list" style="list-style-type: none; padding: 0; margin: 0;">
+
+				
+			</ul>
+		</form>
+	</div>
   </div>
 
+    <script type="text/javascript" src = "./test/local_test_data.js"></script>
 	<script type="text/javascript" src = "./page.js"></script>
 
 </html>
