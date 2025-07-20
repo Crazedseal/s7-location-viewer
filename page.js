@@ -13,6 +13,7 @@ var lowestUnrest = 1000;
 var highestSlotsRemaining = -1;
 var lowestSlotsRemaining = 1000;
 var buildingOwnerList = new Set();
+var resourceList = new Set();
 var buildingParseRegex = /^(?<building_name>[A-Za-z\s]*) \- (?<stats>((?:We|Tx|U|In|\$|Tx|Sv|Sc|Pr|Tr)\:\-?\d{1,3}(?:\.\d+)?(?: (\(\-?\d{1,3}(\.\d{1,3})?)\))?\,* *)+)(?<owner>\([a-zA-Z\s]*\))$/
 var buildingOwnerStatistics = {};
 
@@ -155,6 +156,14 @@ async function loadData() {
 					n_data.Building_Owner_Count[ParseBuildingsRural.groups.owner]++;
 				}
 			}
+
+			for (Resource of n_data.Resource.split(",")) {
+				newResource = Resource.trim();
+				if (newResource == "") {
+					continue;
+				}
+				resourceList.add(newResource);
+			}
 		}
 
 		for (const owner in n_data.Building_Owner_Count) {
@@ -190,18 +199,47 @@ loadData().then(
 		var buttons = document.getElementsByClassName('mm_button');
 
 		const owoDiv = document.getElementById("mm_buildings_owner_list");
-		let isFirst = true;
-		for (const owner of buildingOwnerList) {
-			
+		const resourceListElement = document.getElementById("mm_resource_list");
+		let isFirstResource = true;
+		let isFirstBuildingOwner = true;
+		for (const resource of resourceList) {
+			let new_radio = document.createElement("input");
+			new_radio.setAttribute("name", "resource");
+			new_radio.setAttribute("type", "radio");
+			new_radio.setAttribute("value", resource);
+			new_radio.setAttribute("id", `resource_${resource}`)
+			if (isFirstResource) {
+				new_radio.setAttribute("checked", "");
+				isFirstResource = false;
+			}
+			new_radio.addEventListener(
+				"click", (event) => {
+					if (currentMapMode == "resource") {
+						doResourceMapMode();
+					}
+				}
+			)
 
+			let new_label = document.createElement("label");
+			new_label.setAttribute("for", `resource_${resource}`);
+			new_label.innerText=resource;
+
+
+			let new_list_item = document.createElement("li");
+			new_list_item.append(new_radio);
+			new_list_item.append(new_label);
+			resourceListElement.appendChild(new_list_item);
+		}
+
+		for (const owner of buildingOwnerList) {
 			let new_radio = document.createElement("input");
 			new_radio.setAttribute("name", "building_presence");
 			new_radio.setAttribute("type", "radio");
 			new_radio.setAttribute("value", owner);
 			new_radio.setAttribute("id", `build_presence_${owner}`)
-			if (isFirst) {
+			if (isFirstBuildingOwner) {
 				new_radio.setAttribute("checked", "");
-				isFirst = false;
+				isFirstBuildingOwner = false;
 			}
 			new_radio.addEventListener(
 				"click", (event) => {
@@ -289,6 +327,9 @@ function showMapMode(mapmode) {
 			break;
 		case "building_owner":
 			doBuildingsPresenceMapmode();
+			break;
+		case "resource":
+			doResourceMapMode();
 			break;
 		default:
 			alert(`No map mode named ${mapmode}.`);
@@ -419,5 +460,29 @@ function doBuildingsPresenceMapmode() {
 		Green = 255 * diffFromLowest;
 		Red = 255 * diffFromHighest;
 		svgDoc.getElementById(`region_${r}`).style.fill = `rgba(${Red}, ${Green}, 0, 0.33)`
+	}
+}
+
+function doResourceMapMode() {
+	let targetResource = document.getElementById("mm_resource_form").elements["resource"].value;
+
+	for (let r = 1; r < 23; r++) {
+		region_data = data[r];
+		let resources = (String)(region_data.Resource).split(",");
+		hasResource = false;
+		for (Resource of resources) {
+			if (Resource.trim() == targetResource) {
+				hasResource = true;
+				break;
+			}
+		}
+
+		if (hasResource) {
+			svgDoc.getElementById(`region_${r}`).style.fill = `rgba(0, 255, 0, 0.33)`;
+		}
+		else {
+			svgDoc.getElementById(`region_${r}`).style.fill = `rgba(255, 0, 0, 0.33)`
+		}
+
 	}
 }
