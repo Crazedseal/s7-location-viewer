@@ -156,6 +156,22 @@ async function loadData() {
 					n_data.Building_Owner_Count[ParseBuildingsRural.groups.owner]++;
 				}
 			}
+			ResourceBuildingSplit = n_data.Resource_Buildings.split("\n");
+			for (const building of ResourceBuildingSplit) {
+				ParseBuildingResource = building.match(buildingParseRegex);
+				if (ParseBuildingResource == null) {
+					console.log(`id: ${n_data.ID}: ${building}`);
+					continue;
+				}
+				buildingOwnerList.add(ParseBuildingResource.groups.owner);
+				n_data.Building_Owners.add(ParseBuildingsRural.groups.owner);
+				if (n_data.Building_Owner_Count[ParseBuildingResource.groups.owner] == null) {
+					n_data.Building_Owner_Count[ParseBuildingResource.groups.owner] = 1;
+				}
+				else {
+					n_data.Building_Owner_Count[ParseBuildingResource.groups.owner]++;
+				}
+			}
 
 			for (Resource of n_data.Resource.split(",")) {
 				newResource = Resource.trim();
